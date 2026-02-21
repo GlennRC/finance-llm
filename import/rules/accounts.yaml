@@ -1,0 +1,16 @@
+# Account categorization rules
+# Maps payees/patterns to hledger expense accounts
+#
+# Format:
+#   - payee: "Clean Payee Name"
+#     account: "Expenses:Category:Subcategory"
+#
+# Examples:
+#   - payee: "Trader Joe's"
+#     account: "Expenses:Groceries"
+#   - payee: "Amazon"
+#     account: "Expenses:Shopping"
+#   - payee: "Netflix"
+#     account: "Expenses:Subscriptions"
+
+rules: []

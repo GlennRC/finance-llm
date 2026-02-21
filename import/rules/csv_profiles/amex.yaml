@@ -1,0 +1,36 @@
+# Amex CSV profile
+# Defines how to parse American Express CSV exports
+
+institution: amex
+name: "American Express"
+
+# CSV structure
+csv:
+  encoding: utf-8
+  delimiter: ","
+  skip_rows: 0
+  has_header: true
+
+# Column mappings
+columns:
+  date: "Date"
+  description: "Description"
+  amount: "Amount"
+  extended_details: "Extended Details"
+  appears_on: "Appears On Your Statement As"
+  address: "Address"
+  city_state: "City/State"
+  zip: "Zip Code"
+  country: "Country"
+  reference: "Reference"
+  category: "Category"
+
+# Date parsing
+date_format: "%m/%d/%Y"
+
+# Amount handling
+# Amex: positive = debit (spending), negative = credit (payment/refund)
+amount_invert: false
+
+# Default account for this institution
+default_account: "Liabilities:CreditCard:Amex"

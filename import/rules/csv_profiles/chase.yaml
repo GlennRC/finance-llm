@@ -1,0 +1,32 @@
+# Chase CSV profile
+# Defines how to parse Chase bank/credit card CSV exports
+
+institution: chase
+name: "Chase"
+
+# CSV structure
+csv:
+  encoding: utf-8
+  delimiter: ","
+  skip_rows: 0
+  has_header: true
+
+# Column mappings (0-indexed or header names)
+columns:
+  date: "Transaction Date"
+  post_date: "Post Date"
+  description: "Description"
+  category: "Category"
+  type: "Type"
+  amount: "Amount"
+  memo: "Memo"
+
+# Date parsing
+date_format: "%m/%d/%Y"
+
+# Amount handling
+# Chase: negative = debit (spending), positive = credit (payment/refund)
+amount_invert: true
+
+# Default account for this institution
+default_account: "Liabilities:CreditCard:Chase"

@@ -1,0 +1,15 @@
+# Payee normalization rules
+# Maps raw bank payee strings to clean names
+# Supports exact match and regex patterns
+#
+# Format:
+#   - pattern: "REGEX_OR_EXACT"
+#     name: "Clean Payee Name"
+#
+# Examples:
+#   - pattern: "^TRADER JOE"
+#     name: "Trader Joe's"
+#   - pattern: "AMZN|AMAZON"
+#     name: "Amazon"
+
+rules: []

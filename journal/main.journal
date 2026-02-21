@@ -1,0 +1,3 @@
+; Main hledger journal - includes all posted monthly files
+; DO NOT edit directly - use bin/post to add transactions
+
