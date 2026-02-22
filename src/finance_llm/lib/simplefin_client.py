@@ -97,11 +97,6 @@ class SimpleFINAccount:
 
         # Last resort: use first part of domain
         return domain.split(".")[0]
-        for key, value in mappings.items():
-            if key in domain:
-                return value
-        # Fallback: use first part of domain
-        return domain.split(".")[0]
 
 
 class SimpleFINClient:

@@ -1,0 +1,36 @@
+2026-01-23 Costco  ; fingerprint:9e42272d0b7727e99d6bc188bef80ff194fb4b2028338797e6c47f42d77501df
+    Expenses:Groceries    $-54.17
+    Liabilities:CreditCard:Citi
+
+2026-01-23 Costco  ; fingerprint:c2c854151edeaf7e2dda791ca8ddf62ecd1ba1c5b133befa7dea446107371b09
+    Expenses:Groceries    $-79.98
+    Liabilities:CreditCard:Citi
+
+2026-01-19 The Pantry  ; fingerprint:66b3ba94d1eca51e56d0c459d74c221c5955da32b93e2da4cf64080ce3228904
+    Expenses:Dining    $-82.18
+    Liabilities:CreditCard:Citi
+
+2026-01-18 Costco  ; fingerprint:8e0e0be49890dc59a9b08487656793e0ca7e933c7642e3b855b49c77bb740937
+    Expenses:Groceries    $-150.65
+    Liabilities:CreditCard:Citi
+
+2026-01-13 Citi Autopay  ; fingerprint:a7a5ea95fcbf862b0f9d2cbc012e9c349f225141b4307829edb15f2f3bceeaff
+    Liabilities:CreditCard:Citi    $46.68
+    Liabilities:CreditCard:Citi
+
+2026-01-31 Nestworks  ; fingerprint:ea3f7710b283711fe40341e8ab5afba683b4871725e0f7ea4b4283efe9d106da
+    Expenses:Subscriptions    $30.00
+    Liabilities:CreditCard:Citi
+
+2026-01-24 Disney+  ; fingerprint:8fa9d943020cd66cbcb5fd261ff63f74562d28274540ca6ed4603885fc07c081
+    Expenses:Subscriptions    $-19.99
+    Liabilities:CreditCard:Citi
+
+2026-01-07 Amazon  ; fingerprint:c9780f2d043036e6bd9c699bb5ff5df4b49f8b802533f0c6a52b9b68dbb9fb30
+    Expenses:Shopping:Amazon    $-16.30
+    Liabilities:CreditCard:Citi
+
+2026-01-02 Citi Autopay  ; fingerprint:5dd56d35cc6d9031030254eaf3aa92d64b83b93802499160efc8ca64e8a69b3d
+    Liabilities:CreditCard:Citi    $69.29
+    Liabilities:CreditCard:Citi
+

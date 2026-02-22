@@ -69,7 +69,11 @@ def ingest_csv(project_root: Path, csv_file: str, profile: str) -> list[Canonica
 
 
 def ingest_simplefin(project_root: Path, days: int) -> list[CanonicalTransaction]:
-    """Pull transactions from SimpleFIN API."""
+    """Pull transactions from SimpleFIN API.
+
+    SimpleFIN allows max 60-day windows per request. For longer ranges,
+    we chunk into 60-day windows automatically.
+    """
     from finance_llm.lib.simplefin_client import SimpleFINClient, load_access_url
 
     state_dir = project_root / "import" / "state"
@@ -84,8 +88,34 @@ def ingest_simplefin(project_root: Path, days: int) -> list[CanonicalTransaction
     end_date = datetime.now(timezone.utc)
     start_date = end_date - timedelta(days=days)
 
-    click.echo(f"Fetching transactions from SimpleFIN ({days} days)...")
-    accounts = client.get_accounts(start_date=start_date, end_date=end_date)
+    # Chunk into 60-day windows (SimpleFIN API constraint)
+    chunk_size = 60
+    windows = []
+    window_end = end_date
+    while window_end > start_date:
+        window_start = max(start_date, window_end - timedelta(days=chunk_size))
+        windows.append((window_start, window_end))
+        window_end = window_start
+
+    click.echo(f"Fetching transactions from SimpleFIN ({days} days, {len(windows)} request(s))...")
+    accounts_by_id: dict[str, object] = {}
+    for i, (w_start, w_end) in enumerate(windows, 1):
+        if len(windows) > 1:
+            click.echo(f"  Request {i}/{len(windows)}: {w_start.strftime('%Y-%m-%d')} → {w_end.strftime('%Y-%m-%d')}")
+        chunk_accounts = client.get_accounts(start_date=w_start, end_date=w_end)
+        for acct in chunk_accounts:
+            if acct.id in accounts_by_id:
+                # Merge transactions, dedup by transaction ID
+                existing = accounts_by_id[acct.id]
+                seen_ids = {t.id for t in existing.transactions}
+                for txn in acct.transactions:
+                    if txn.id not in seen_ids:
+                        existing.transactions.append(txn)
+                        seen_ids.add(txn.id)
+            else:
+                accounts_by_id[acct.id] = acct
+
+    accounts = list(accounts_by_id.values())
 
     all_transactions: list[CanonicalTransaction] = []
     for acct in accounts:
@@ -145,7 +175,7 @@ def _map_account(account_name: str, institution: str) -> str:
 @click.option("--profile", "-p", default=None, help="CSV profile name (e.g., chase, amex)")
 @click.option("--source", "-s", type=click.Choice(["csv", "simplefin"]), default="csv",
               help="Data source")
-@click.option("--days", "-d", default=30, help="Days of history to fetch (SimpleFIN only)")
+@click.option("--days", "-d", default=30, help="Days of history to fetch; >60 auto-chunks (SimpleFIN only)")
 @click.option("--root", type=click.Path(exists=True), default=None, help="Project root directory")
 def main(
     csv_file: str | None, profile: str | None, source: str, days: int, root: str | None

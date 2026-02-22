@@ -1,0 +1,36 @@
+2025-09-28 Rula Health  ; fingerprint:a689f5b3d3c9cfaae5a63603ce1128e712fa29f6416a90afb631f39d20ff311a
+    Expenses:Health:Therapy    $-20.00
+    Liabilities:CreditCard:Citi
+
+2025-09-27 Sutter Health Medical  ; fingerprint:83ea0c927b19d195c742d72f23b3eb59479ac53ad0af52650ac37160ec42089b
+    Expenses:Health:Medical    $-45.03
+    Liabilities:CreditCard:Citi
+
+2025-09-25 Disney+  ; fingerprint:c2169e02d22551c6f5feafbf0a1c593f4e338d4049c4050a0e563c6737ac1978
+    Expenses:Subscriptions    $-29.99
+    Liabilities:CreditCard:Citi
+
+2025-09-22 Trade Coffee  ; fingerprint:9c50ffa2c7b62218fff94167285a599d747d0fee05c715a450c657ec410ff866
+    Expenses:Food:Coffee    $-39.99
+    Liabilities:CreditCard:Citi
+
+2025-09-20 Rula Health  ; fingerprint:ceebc3d8911c69121d83a45352e1d88db5137c1e64142e79991943a4725c7d29
+    Expenses:Health:Therapy    $-20.00
+    Liabilities:CreditCard:Citi
+
+2025-09-09 Bonney Plumbing  ; fingerprint:4ea038963e283bf7fa4ca2c8d4473ef3f98366a94c19b929bbbe8e13a4bdf95a
+    Expenses:Home:Maintenance    $-18.95
+    Liabilities:CreditCard:Citi
+
+2025-09-07 Amazon  ; fingerprint:b84b15afe0301cda551d0e00d6e85681e34291c4c92038231eb5898cd37af961
+    Expenses:Shopping:Amazon    $-16.30
+    Liabilities:CreditCard:Citi
+
+2025-09-06 Rula Health  ; fingerprint:ea8531057832b8b4abdee2d3c237c900c02222ccbe9f65703c4df731f88b27be
+    Expenses:Health:Therapy    $-40.00
+    Liabilities:CreditCard:Citi
+
+2025-09-02 Citi Autopay  ; fingerprint:45d1f9e724ec51313f1603e0a5387f0947e834def5eb38cbdd5b772dce8747c4
+    Liabilities:CreditCard:Citi    $292.16
+    Liabilities:CreditCard:Citi
+

@@ -1,0 +1,65 @@
+name: Daily SimpleFIN Ingest
+
+on:
+  schedule:
+    - cron: '0 14 * * *'  # 6 AM PST / 2 PM UTC
+  workflow_dispatch: {}     # manual trigger
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install package
+        run: pip install -e .
+
+      - name: Setup SimpleFIN credentials
+        run: |
+          mkdir -p import/state
+          echo '{"access_url": "${{ secrets.SIMPLEFIN_ACCESS_URL }}"}' > import/state/simplefin_access.json
+
+      - name: Restore dedup database
+        uses: actions/cache/restore@v4
+        with:
+          path: import/state/seen_transactions.sqlite
+          key: seen-txns-${{ github.run_number }}
+          restore-keys: seen-txns-
+
+      - name: Ingest from SimpleFIN
+        run: fin-ingest --source simplefin --days 3 --root .
+
+      - name: Post staged transactions
+        run: fin-post --root .
+
+      - name: Save dedup database
+        uses: actions/cache/save@v4
+        if: always()
+        with:
+          path: import/state/seen_transactions.sqlite
+          key: seen-txns-${{ github.run_number }}
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "finance-bot"
+          git config user.email "finance-bot@noreply.github.com"
+          git add journal/
+          if git diff --cached --quiet; then
+            echo "No new transactions"
+          else
+            git commit -m "chore: daily ingest $(date +%Y-%m-%d)"
+            git push
+          fi
+
+      - name: Deploy to Fly.io
+        if: success()
+        run: |
+          curl -L https://fly.io/install.sh | sh
+          export PATH="$HOME/.fly/bin:$PATH"
+          flyctl deploy --remote-only
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}

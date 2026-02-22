@@ -94,3 +94,37 @@ rules:
   - payee: "Amex Payment Reversal"
     account: "Liabilities:CreditCard:Amex"
 
+  # Entertainment / Subscriptions
+  - payee: "Prime Video"
+    account: "Expenses:Subscriptions"
+  - payee: "Netflix"
+    account: "Expenses:Subscriptions"
+
+  # Health
+  - payee: "Rula Health"
+    account: "Expenses:Health:Therapy"
+  - payee: "Sutter Health Medical"
+    account: "Expenses:Health:Medical"
+
+  # Food & Drink
+  - payee: "Trade Coffee"
+    account: "Expenses:Food:Coffee"
+
+  # Home
+  - payee: "Bonney Plumbing"
+    account: "Expenses:Home:Maintenance"
+
+  # Shopping
+  - payee: "ZSA Technology"
+    account: "Expenses:Shopping:Electronics"
+  - payee: "Shutterfly"
+    account: "Expenses:Shopping"
+  - payee: "Bug-A-Salt"
+    account: "Expenses:Shopping"
+
+  # Cash / Transfers
+  - payee: "ATM Withdrawal"
+    account: "Expenses:Cash"
+  - payee: "MoneyLine Transfer"
+    account: "Assets:Checking:FirstTech"
+

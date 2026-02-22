@@ -1,0 +1,36 @@
+2025-11-22 Costco  ; fingerprint:e80b143471495c16d782db4a3d21a01c772b923f00af43a1683d15431945efd4
+    Expenses:Groceries    $-262.17
+    Liabilities:CreditCard:Citi
+
+2025-11-11 Costco  ; fingerprint:f65121d3382e6249e17d76450aa0db612927d8602b43861891700a57d9b0e0a2
+    Expenses:Groceries    $256.41
+    Liabilities:CreditCard:Citi
+
+2025-11-11 Costco  ; fingerprint:54bbc4614df5211c4eef7e5882eafdd4853765abb8c4134ae55e04efc183c0fb
+    Expenses:Groceries    $-511.36
+    Liabilities:CreditCard:Citi
+
+2025-11-03 Costco  ; fingerprint:11868fc807f1a087fa2fc79f7fcae250987cd8e93497bbaec201f727c1befba6
+    Expenses:Groceries    $-75.97
+    Liabilities:CreditCard:Citi
+
+2025-11-24 Disney+  ; fingerprint:7def0ab0ca9cb5817ef90b231d59f15d71df62e9113d94dd87d90772c146e19d
+    Expenses:Subscriptions    $-32.99
+    Liabilities:CreditCard:Citi
+
+2025-11-07 Amazon  ; fingerprint:2f68a561e44a04e883d63da382873805589f2db394a40fee1f069a4d02c913aa
+    Expenses:Shopping:Amazon    $-16.30
+    Liabilities:CreditCard:Citi
+
+2025-11-07 Rula Health  ; fingerprint:b1f2eba9f867b5a894ef6de4f05585e7efb68b7ba2be5294004047ec068a0b96
+    Expenses:Health:Therapy    $-20.00
+    Liabilities:CreditCard:Citi
+
+2025-11-02 Citi Autopay  ; fingerprint:57393ed0ea357687b5d5f6756f62afa7862d22b00c73d2f0e25385bebdad0f05
+    Liabilities:CreditCard:Citi    $328.75
+    Liabilities:CreditCard:Citi
+
+2025-11-01 Nestworks  ; fingerprint:7f9b54db5bee87fcf3b5c3ba40a2fa7cbda46851cb8fb86d962712a3342b3ff6
+    Expenses:Subscriptions    $-30.00
+    Liabilities:CreditCard:Citi
+

@@ -1,0 +1,20 @@
+2025-11-28 Goddard School  ; fingerprint:1dc164fc6e20c8f990a3a303132478d1aa08344e34646f16a9ad2796fd0a685b
+    Expenses:Childcare    $-1966.00
+    Assets:Checking:FirstTech
+
+2025-11-26 HPE Payroll  ; fingerprint:d347ea3eb2b85bb6f8a366d97a2c4dad97df51f120556be47ea4f301993a3ea8
+    Income:Salary:HPE    $3157.71
+    Assets:Checking:FirstTech
+
+2025-11-26 Sutter Health Payroll  ; fingerprint:8c845ddfcfe8d4444f96269734a9da6f37c30049e2eff4db7410dcadfa3b38ca
+    Income:Salary:SutterHealth    $2103.91
+    Assets:Checking:FirstTech
+
+2025-11-24 Citi Card Payment  ; fingerprint:d925f543aa667d5b7609544690b9d358a78a39b5efd33cd6bb2b52f632bd3689
+    Liabilities:CreditCard:Citi    $-500.00
+    Assets:Checking:FirstTech
+
+2025-11-24 VW Credit Auto Loan  ; fingerprint:4fc9d36bc08345d7104741d3108fccc5e6481e0341f6041f4478283042fded93
+    Expenses:Auto:Loan    $-912.89
+    Assets:Checking:FirstTech
+

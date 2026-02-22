@@ -31,6 +31,5 @@ import/state/gmail_credentials.json
 import/state/simplefin_access.json
 reports/weekly/
 
-# Journal data (tracked separately or kept private)
-journal/postings/
+# Staging area (temporary, emptied after posting)
 journal/staging/

@@ -1,0 +1,160 @@
+2026-01-29 HPE Payroll  ; fingerprint:94ca44f8b9d8144d41b5e722b908fe87475015f67c049e5a204e15d5e11b27c5
+    Income:Salary:HPE    $2438.84
+    Assets:Checking:FirstTech
+
+2026-01-28 Venmo  ; fingerprint:785e607c3b5e3e6ab904fce54dbe6d7cce5e25433ae7341a95b43ffa06b1c043
+    Expenses:Transfers:Venmo    $-40.00
+    Assets:Checking:FirstTech
+
+2026-01-27 Goddard School  ; fingerprint:0850db9931643ec9611aaea00ad3c96227f8ff654b9af5f055ec4f89c527daf4
+    Expenses:Childcare    $-1966.00
+    Assets:Checking:FirstTech
+
+2026-01-27 Venmo  ; fingerprint:15a1b14a45bf2a1c427c34d2a58ad90d35eaf18f08c1995a40946932a7e07642
+    Expenses:Transfers:Venmo    $-15.00
+    Assets:Checking:FirstTech
+
+2026-01-22 VW Credit Auto Loan  ; fingerprint:6afd7acc77c0993621a9b9562ebb080424cc6d7bad8f44f9c32240003e36e30d
+    Expenses:Auto:Loan    $-912.89
+    Assets:Checking:FirstTech
+
+2026-01-21 First Tech Mobile Deposit  ; fingerprint:d04657fb31835ad75888f5b704011aff204feeb40a47e5b215c6196767903c9b
+    Assets:Checking:FirstTech    $4565.19
+    Assets:Checking:FirstTech
+
+2026-01-21 First Tech Mobile Deposit Adj  ; fingerprint:7f1a1af6e4d5a63213826d6c6413f426b87987a85fa45841b71b2065378f0d2f
+    Assets:Checking:FirstTech    $-4565.19
+    Assets:Checking:FirstTech
+
+2026-01-21 Sutter Health Payroll  ; fingerprint:f037a8816f1e98fe2cd7834e96285a4a873fea4f1fa8e376132dcc0c0b3e205e
+    Income:Salary:SutterHealth    $2097.10
+    Assets:Checking:FirstTech
+
+2026-01-21 Citi Card Payment  ; fingerprint:f86e36246d3fda88d4c091a615c8e1aafbe069d65ebf30b35f38c313a4a8c653
+    Liabilities:CreditCard:Citi    $-1000.00
+    Assets:Checking:FirstTech
+
+2026-01-21 First Tech Deposit  ; fingerprint:cb56e86c14f83aac76aaae4baf7bd00e3d0a065a617119741e30b1656d59afdb
+    Assets:Checking:FirstTech    $4565.19
+    Assets:Checking:FirstTech
+
+2026-01-21 First Tech P2P Transfer  ; fingerprint:ae74adeff112a641d5518e2121f27bca4d4404fa434f13b517c4ac93bada49fa
+    Expenses:Transfers:P2P    $-500.00
+    Assets:Checking:FirstTech
+
+2026-01-20 First Tech Mobile Deposit Adj  ; fingerprint:528537b4d9a9dd9db099b9c80dbf5ee7bf671bf360ac630cf58dc0baae266ae7
+    Assets:Checking:FirstTech    $-4565.19
+    Assets:Checking:FirstTech
+
+2026-01-20 First Tech Mobile Deposit  ; fingerprint:b8163848739e1ec969cca49481a72b6a30dca6ea9734a94ca115b09297780563
+    Assets:Checking:FirstTech    $4565.19
+    Assets:Checking:FirstTech
+
+2026-01-20 Apple Card Payment  ; fingerprint:1cc00937ff1d7867e3d5f0e9caa8d8e9eb7b3b5741ab2d9e3c3a275d9dd5b0b2
+    Liabilities:CreditCard:Apple    $-227.26
+    Assets:Checking:FirstTech
+
+2026-01-20 Venmo  ; fingerprint:b1d197eaa3afa1845e156640162c6404b8cb9b2167a0b0f98831bc84be971f28
+    Expenses:Transfers:Venmo    $-15.00
+    Assets:Checking:FirstTech
+
+2026-01-20 Discover Transfer  ; fingerprint:b39466a92b31f36cc3ac238722dec57751d005c9d8f31df857cbf4bec78793df
+    Assets:Savings:Discover    $2000.00
+    Assets:Checking:FirstTech
+
+2026-01-19 First Tech ATM Deposit  ; fingerprint:7dc91934b8bcc5d56a7b33d7338d362298ca873534268a3203be68c15ee731b9
+    Assets:Checking:FirstTech    $282.00
+    Assets:Checking:FirstTech
+
+2026-01-16 Citi Card Payment  ; fingerprint:4651657da8ba72064e906b7f9967342f1620479417fa93b26911eba441454303
+    Liabilities:CreditCard:Citi    $-799.95
+    Assets:Checking:FirstTech
+
+2026-01-16 Venmo  ; fingerprint:d85f08c2a96e1552c4c2f902b28966643fd523ac337b86e2e73797e1945e86ea
+    Expenses:Transfers:Venmo    $-15.00
+    Assets:Checking:FirstTech
+
+2026-01-16 Amex Payment  ; fingerprint:8525881ad5aba9d7e6889a4cc16057704aab1ab582f087a940c1b368b0875775
+    Liabilities:CreditCard:Amex    $-5391.27
+    Assets:Checking:FirstTech
+
+2026-01-15 ScholarShare 529  ; fingerprint:3cde6e3b8a4061e4a0f09ce31a5f3abe9f509a3e6566b7444c4edf86af33c75c
+    Expenses:Education:529    $-21.00
+    Assets:Checking:FirstTech
+
+2026-01-15 ScholarShare 529  ; fingerprint:b1a6e23c7483c84fddbac3533fa8219f44a86454e96e647aa8beea7ba780b6bf
+    Expenses:Education:529    $-21.00
+    Assets:Checking:FirstTech
+
+2026-01-15 ScholarShare 529  ; fingerprint:e81cfee1b6edef7add45ccdaa0f4e4646ad1f432bf4875c5768fc4c263bfbb45
+    Expenses:Education:529    $-21.00
+    Assets:Checking:FirstTech
+
+2026-01-14 HPE Payroll  ; fingerprint:98f8b1d21a7f767c3f2bd803aa8bea0dfa9bdffcd83a0202b0e8aec11d8b9795
+    Income:Salary:HPE    $2438.84
+    Assets:Checking:FirstTech
+
+2026-01-14 PG&E  ; fingerprint:f1281d11cfd2f0f65a330b184257f6540b9f1090524c5595cb656632815c868f
+    Expenses:Housing:Electric    $-315.97
+    Assets:Checking:FirstTech
+
+2026-01-14 AT&T  ; fingerprint:795090f603b65dbabc4160fb10bc91a554871cdf1627ee7be79c4d6d9230842f
+    Expenses:Telecom:ATT    $-199.63
+    Assets:Checking:FirstTech
+
+2026-01-14 Discover Transfer  ; fingerprint:72a0bfd3bb82156c06115d2b8fe7e66b7dbd4a7c3bf0681cfc9bff5d4e6dc6fb
+    Assets:Savings:Discover    $3000.00
+    Assets:Checking:FirstTech
+
+2026-01-13 Citi Card Payment  ; fingerprint:b8f7bac58e82e1c0dd9a304b073a46b64e484d6b0aa77c503b2f93b15351a103
+    Liabilities:CreditCard:Citi    $-46.68
+    Assets:Checking:FirstTech
+
+2026-01-12 Amex Payment  ; fingerprint:10e2ce5bad7f738ef295726b3f8738109d185dd8cdfeb54dede2ff5005bbfd20
+    Liabilities:CreditCard:Amex    $-4499.00
+    Assets:Checking:FirstTech
+
+2026-01-12 Amex Payment  ; fingerprint:cf5e015cc27d05d0c4e8c7472b79a11948f138dae181b67a6ac96076076f683e
+    Liabilities:CreditCard:Amex    $4499.00
+    Assets:Checking:FirstTech
+
+2026-01-12 Chase Card Payment  ; fingerprint:c5948a53c1e160cbcc314ee8458c9e4f068840e8e0e4a3ac5be857c5c2430d51
+    Liabilities:CreditCard:Chase    $-672.46
+    Assets:Checking:FirstTech
+
+2026-01-09 Macy's  ; fingerprint:82aa489a503ea391532d1eecf04dc354db895c88b39a3611ebaea5bae2687f55
+    Liabilities:CreditCard:Macys    $-62.28
+    Assets:Checking:FirstTech
+
+2026-01-07 Sutter Health Payroll  ; fingerprint:4821d4545d19cd7cee3dc8f4ca7f511b07598d5aa69b812f1306269d9aeeba40
+    Income:Salary:SutterHealth    $698.64
+    Assets:Checking:FirstTech
+
+2026-01-05 Citi Card Payment  ; fingerprint:9bd8b0d057d0ab4cb77a513ad08e5f967666922efdd27b6e3188ec70dff5b817
+    Liabilities:CreditCard:Citi    $-2069.91
+    Assets:Checking:FirstTech
+
+2026-01-05 City of Roseville Utilities  ; fingerprint:ba5768fe7ab72e89fe1c55881df9cce2a611a2a09d50c057f997f041677cd5e8
+    Expenses:Housing:Utilities    $-290.95
+    Assets:Checking:FirstTech
+
+2026-01-03 AT&T  ; fingerprint:c0f78046379fe1263b1a3bff4762fc00c8deef3c981d7f7f7f45f6ddb0bbfc87
+    Expenses:Telecom:ATT    $-97.31
+    Assets:Checking:FirstTech
+
+2026-01-02 Citi Card Payment  ; fingerprint:6aaa42ac839ac282425650b6ad1a19e68bfbdb023fdf4cf2e3aa24c8dada6f91
+    Liabilities:CreditCard:Citi    $-69.29
+    Assets:Checking:FirstTech
+
+2026-01-02 Freedom Mortgage  ; fingerprint:6c745486527c11f118262a2d3a2d18fc067e1ca3fc13d5d3bf9445bc95525903
+    Expenses:Housing:Mortgage    $-2658.23
+    Assets:Checking:FirstTech
+
+2026-01-02 Wells Fargo Card Payment  ; fingerprint:afbcc6d3f58e82e15c305c4899361b6b85eac65c8a0182586c78cc8175695875
+    Liabilities:CreditCard:WellsFargo    $-4.98
+    Assets:Checking:FirstTech
+
+2026-01-02 Sunstrong Solar  ; fingerprint:166ad47f4e0c14c8a6d5d269e8d4416103920da8697d1df1890086f1b1b91381
+    Expenses:Housing:Solar    $-54.37
+    Assets:Checking:FirstTech
+
