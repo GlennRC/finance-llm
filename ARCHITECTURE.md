@@ -2,9 +2,9 @@
 
 ## Overview
 
-Finance LLM is a personal finance system that combines **hledger** (plain-text accounting) with **LLM-powered insights** via ChatGPT. Bank data flows in via **SimpleFIN** (direct bank API), gets transformed into hledger journals, and becomes queryable through both a CLI and ChatGPT.
+Finance LLM is a personal finance system that combines **hledger** (plain-text accounting) with **LLM-powered insights** via ChatGPT. Bank data flows in via **SimpleFIN** (direct bank API), gets transformed into hledger journals, and becomes queryable through a CLI, ChatGPT Desktop, or ChatGPT Web.
 
-The system has three layers: **data ingestion**, **accounting engine**, and **LLM interaction**.
+The system has four layers: **data ingestion**, **accounting engine**, **LLM interaction**, and **deployment**.
 
 ---
 
@@ -19,7 +19,7 @@ The system has three layers: **data ingestion**, **accounting engine**, and **LL
                                      ▼
 ┌─────────────────────────────────────────────────────────────────────┐
 │                                                                     │
-│   LAYER 1: DATA INGESTION                                           │
+│   LAYER 1: DATA INGESTION (local machine)                           │
 │                                                                     │
 │   ┌──────────────┐    ┌──────────────┐    ┌───────────────────┐    │
 │   │ SimpleFIN     │───▶│csv_normalizer│───▶│  journal_writer   │    │
@@ -27,14 +27,7 @@ The system has three layers: **data ingestion**, **accounting engine**, and **LL
 │   │ Fetch bank   │    │ Parse with   │    │ Apply rules,     │    │
 │   │ transactions │    │ CSV profile  │    │ dedup, write     │    │
 │   │ via API      │    │ → JSONL      │    │ hledger entries   │    │
-│   └──────┬───────┘    └──────┬───────┘    └────────┬──────────┘    │
-│          │                   │                     │               │
-│          ▼                   ▼                     ▼               │
-│   ┌────────────┐     ┌────────────┐        ┌────────────┐         │
-│   │import/raw/ │     │ import/    │        │ journal/   │         │
-│   │ (archived  │     │ canonical/ │        │ staging/   │         │
-│   │  data)     │     │ (JSONL)    │        │ (pending)  │         │
-│   └────────────┘     └────────────┘        └────────────┘         │
+│   └──────────────┘    └──────────────┘    └───────────────────┘    │
 │                                                                     │
 │   Supporting: fingerprint.py (dedup) │ rules.py (YAML) │ state.py │
 │                                                                     │
@@ -50,10 +43,9 @@ The system has three layers: **data ingestion**, **accounting engine**, and **LL
 │   journal/                                                          │
 │   ├── main.journal          ◄── single entry point                  │
 │   └── postings/                                                     │
-│       └── 2026/                                                     │
-│           └── 2026-02/                                              │
-│               ├── chase.journal    ◄── posted transactions          │
-│               └── amex.journal                                      │
+│       └── YYYY/YYYY-MM/                                             │
+│           ├── citi.journal       ◄── posted transactions            │
+│           └── firsttech.journal                                     │
 │                                                                     │
 │   hledger reads main.journal (which includes all posting files)     │
 │   and provides: balances, registers, income statements, stats       │
@@ -72,14 +64,38 @@ The system has three layers: **data ingestion**, **accounting engine**, and **LL
 │   ┌─────────────────┐  ┌──────────────────┐  ┌──────────────────┐  │
 │   │  MCP Server      │  │  fin CLI          │  │  Report Gen      │  │
 │   │                  │  │                  │  │                  │  │
-│   │  ChatGPT desktop │  │  Human terminal  │  │  Automated       │  │
-│   │  calls tools     │  │  queries         │  │  weekly reports  │  │
-│   │  interactively   │  │                  │  │  via OpenAI API  │  │
+│   │  ChatGPT calls   │  │  Human terminal  │  │  Automated       │  │
+│   │  tools via MCP   │  │  queries         │  │  weekly reports  │  │
+│   │  (stdio or HTTP) │  │                  │  │  via OpenAI API  │  │
 │   └─────────────────┘  └──────────────────┘  └──────────────────┘  │
 │                                                                     │
 │   All three use fin_commands.py → hledger (no other path exists)    │
 │                                                                     │
 └─────────────────────────────────────────────────────────────────────┘
+                    │
+                    │ (HTTP transport)
+                    ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│                                                                     │
+│   LAYER 4: DEPLOYMENT (Fly.io)                                      │
+│                                                                     │
+│   ┌────────────────────────────────────────────────────────────┐    │
+│   │  Docker container on Fly.io                                │    │
+│   │                                                            │    │
+│   │  Python 3.13 + hledger binary + journal data (baked in)    │    │
+│   │  MCP server on :8000 → /mcp endpoint                      │    │
+│   │  https://finance-llm-mcp.fly.dev/mcp                      │    │
+│   └────────────────────────────────────────────────────────────┘    │
+│                                                                     │
+│   Auto-deploy: git push → GitHub Actions → fly deploy              │
+│   Auto-stop/start: machine sleeps when idle, wakes on request      │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+
+Access paths:
+  ChatGPT Desktop ──── stdio ────────────► MCP server (local)
+  ChatGPT Web     ──── HTTPS ────────────► MCP server (Fly.io)
+  Terminal        ──── fin CLI ──────────► hledger (local)
 ```
 
 ---
@@ -88,11 +104,17 @@ The system has three layers: **data ingestion**, **accounting engine**, and **LL
 
 ### 1. MCP Server (`finance-mcp-server`)
 
-**Type:** MCP stdio server (launched by ChatGPT desktop app)
+**Type:** FastMCP server with dual transport
 **Entry point:** `fin-mcp` / `python -m finance_llm.bin.mcp`
 **Module:** `lib/mcp_server.py`
+**Framework:** FastMCP (from `mcp` SDK) + Starlette/Uvicorn for HTTP
 
-The primary way to interact with your finances through an LLM. The ChatGPT desktop app connects to this server over stdio and can call tools during conversation.
+The primary way to interact with your finances through an LLM. Supports two transports:
+
+| Transport | Flag | Use case | Endpoint |
+|-----------|------|----------|----------|
+| stdio | *(default)* | ChatGPT Desktop (local) | N/A — piped via process |
+| streamable-http | `--http` | ChatGPT Web (remote) | `POST /mcp` |
 
 **Available tools:**
 
@@ -108,7 +130,7 @@ The primary way to interact with your finances through an LLM. The ChatGPT deskt
 | `fin_stats` | Journal overview | "How many transactions do I have?" |
 | `fin_accounts` | List all accounts | "What accounts are tracked?" |
 
-**ChatGPT desktop config** (`Settings → MCP Servers → Add`):
+**ChatGPT Desktop config** (`Settings → MCP Servers → Add`):
 ```json
 {
   "mcpServers": {
@@ -123,6 +145,10 @@ The primary way to interact with your finances through an LLM. The ChatGPT deskt
 }
 ```
 
+**ChatGPT Web config** (`Settings → Apps & Connectors → Create`):
+- URL: `https://finance-llm-mcp.fly.dev/mcp`
+- Auth: None (anonymous)
+
 **Safety model:** Every tool validates inputs, enforces date range limits (24 months max), caps output at 500 lines, and returns plain text only. The LLM cannot access raw files, execute shell commands, or modify the journal.
 
 ---
@@ -136,6 +162,41 @@ The primary way to interact with your finances through an LLM. The ChatGPT deskt
 Collects financial data via `fin_commands` (balances, income, merchants, anomalies, trends), sends it to the OpenAI API with a finance analyst system prompt, and writes a narrative markdown report to `reports/weekly/`.
 
 **Output example:** `reports/weekly/2026-02-21_2026-02_summary.md`
+
+---
+
+## Deployment
+
+### Fly.io Hosting
+
+The MCP server is deployed as a Docker container on [Fly.io](https://fly.io) for remote access from ChatGPT Web.
+
+**URL:** `https://finance-llm-mcp.fly.dev/mcp`
+
+**Infrastructure:**
+- Region: `sjc` (San Jose, CA)
+- VM: shared-cpu-1x, 256MB RAM
+- Auto-stop when idle, auto-start on incoming request
+- HTTPS enforced via Fly.io edge
+
+**Docker image contents:**
+- Python 3.13 slim
+- hledger static binary (from GitHub releases)
+- Application code (`finance_llm` package)
+- Journal data (baked into image at build time)
+
+**Data sync model:**
+Journal data is read-only on the server. The local machine remains the source of truth for importing and posting transactions. To update the remote server after importing new transactions:
+
+```
+Local: fin-ingest → fin-review → fin-post → git push
+Remote: GitHub Actions → fly deploy → new image with updated journal
+```
+
+The GitHub Actions workflow (`.github/workflows/deploy.yml`) triggers `fly deploy` on every push to `main`, so the remote server stays current within ~90 seconds of a push.
+
+**Transport security:**
+The HTTP transport uses the MCP SDK's DNS rebinding protection with an allowlist for `finance-llm-mcp.fly.dev` and `chatgpt.com` origins.
 
 ---
 
@@ -158,15 +219,14 @@ fin stats                        # journal overview
 
 ### `fin-ingest` — import pipeline
 
-Imports bank CSVs into the staging journal.
+Imports bank transactions via SimpleFIN into the staging journal.
 
 ```bash
-# Manual import (from downloaded CSV)
-fin-ingest --file chase_statement.csv --profile chase
+fin-ingest                        # fetch from SimpleFIN
 
 # What happens:
-# 1. Archives raw CSV to import/raw/chase/2026-02/sha256_<hash>.csv
-# 2. Parses CSV using chase.yaml profile → canonical JSONL
+# 1. Fetches transactions from connected bank accounts via SimpleFIN API
+# 2. Normalizes to canonical JSONL format
 # 3. Applies payee/account rules from YAML
 # 4. Deduplicates via transaction fingerprints
 # 5. Writes hledger entries to journal/staging/
@@ -194,6 +254,14 @@ fin-post --dry-run        # preview without making changes
 
 Moves `journal/staging/*.journal` → `journal/postings/YYYY/YYYY-MM/` and updates `main.journal` with include directives.
 
+### `fin-mcp` — MCP server
+
+```bash
+fin-mcp                   # stdio mode (ChatGPT Desktop)
+fin-mcp --http            # HTTP mode on port 8000 (Fly.io / remote)
+fin-mcp --http --port 9000  # custom port
+```
+
 ---
 
 ## Core Libraries
@@ -205,7 +273,7 @@ Moves `journal/staging/*.journal` → `journal/postings/YYYY/YYYY-MM/` and updat
 | `csv_normalizer.py` | Raw CSV + profile YAML | Canonical JSONL | Parse institution-specific CSVs |
 | `journal_writer.py` | Canonical JSONL | `journal/staging/*.journal` | Generate hledger entries |
 | `fin_commands.py` | Query parameters | hledger text output | Safe hledger command execution |
-| `mcp_server.py` | MCP tool calls | Text responses | ChatGPT ↔ hledger bridge |
+| `mcp_server.py` | MCP tool calls | Text responses | ChatGPT ↔ hledger bridge (FastMCP) |
 | `report_generator.py` | hledger data | Markdown report | AI-narrated summaries |
 
 ### Supporting Libraries
@@ -222,10 +290,10 @@ Moves `journal/staging/*.journal` → `journal/postings/YYYY/YYYY-MM/` and updat
 
 ### Canonical JSONL (intermediate format)
 
-Every transaction passes through this format between CSV parsing and journal writing:
+Every transaction passes through this format between ingestion and journal writing:
 
 ```json
-{"date": "2026-02-15", "amount": "42.50", "payee": "TRADER JOE'S #123", "memo": "", "account": "Liabilities:CreditCard:Chase", "source_id": "", "institution": "chase"}
+{"date": "2026-02-15", "amount": "42.50", "payee": "TRADER JOE'S #123", "memo": "", "account": "Liabilities:CreditCard:Citi", "source_id": "", "institution": "citi"}
 ```
 
 ### hledger Journal Entry
@@ -233,25 +301,25 @@ Every transaction passes through this format between CSV parsing and journal wri
 ```
 2026-02-15 Trader Joe's  ; fingerprint:a1b2c3d4...
     Expenses:Groceries    $42.50
-    Liabilities:CreditCard:Chase
+    Liabilities:CreditCard:Citi
 ```
 
 ### CSV Profile (YAML)
 
 ```yaml
-institution: chase
-name: "Chase"
+institution: citi
+name: "Citi"
 csv:
   encoding: utf-8
   delimiter: ","
   has_header: true
 columns:
-  date: "Transaction Date"
+  date: "Date"
   description: "Description"
   amount: "Amount"
 date_format: "%m/%d/%Y"
-amount_invert: true                    # Chase: negative = debit
-default_account: "Liabilities:CreditCard:Chase"
+amount_invert: true
+default_account: "Liabilities:CreditCard:Citi"
 ```
 
 ### Payee Rules (YAML)
@@ -280,9 +348,7 @@ rules:
 
 | Store | Location | Purpose |
 |-------|----------|---------|
-| `seen_transactions.sqlite` | `import/state/` | Prevents duplicate journal entries. Key: SHA-256 fingerprint. |
-
-Both SQLite databases use WAL mode for safe concurrent access.
+| `seen_transactions.sqlite` | `import/state/` | Prevents duplicate journal entries. Key: SHA-256 fingerprint. WAL mode. |
 
 ---
 
@@ -293,12 +359,12 @@ finance-llm/
 ├── src/finance_llm/
 │   ├── bin/                        # CLI entry points
 │   │   ├── fin.py                  #   hledger query wrapper
-│   │   ├── ingest.py               #   import pipeline
+│   │   ├── ingest.py               #   SimpleFIN import pipeline
 │   │   ├── review.py               #   transaction review
 │   │   ├── post.py                 #   finalize to journal
 │   │   └── mcp.py                  #   MCP server entry point
 │   └── lib/                        # Core libraries
-│       ├── mcp_server.py           #   MCP protocol + tool registration
+│       ├── mcp_server.py           #   FastMCP server + tool definitions
 │       ├── fin_commands.py         #   safe hledger command registry
 │       ├── csv_normalizer.py       #   CSV → canonical JSONL
 │       ├── journal_writer.py       #   JSONL → hledger journal
@@ -312,17 +378,18 @@ finance-llm/
 │   └── postings/                   # Live transactions
 │       └── YYYY/YYYY-MM/*.journal
 ├── import/
-│   ├── raw/                        # Archived original CSVs
+│   ├── raw/                        # Archived original data
 │   ├── canonical/                  # Normalized JSONL
 │   ├── rules/
 │   │   ├── payees.yaml             # Payee normalization
 │   │   ├── accounts.yaml           # Account categorization
 │   │   └── csv_profiles/           # Per-institution CSV formats
-│   │       ├── chase.yaml
-│   │       └── amex.yaml
 │   └── state/                      # Dedup databases
 ├── reports/weekly/                  # AI-generated summaries
 ├── tests/
+├── Dockerfile                      # Fly.io deployment image
+├── fly.toml                        # Fly.io app config
+├── .github/workflows/deploy.yml    # Auto-deploy on push
 ├── pyproject.toml
 └── README.md
 ```
@@ -335,13 +402,15 @@ finance-llm/
 
 2. **LLM is sandboxed.** The LLM (ChatGPT) can only access finances through `fin_commands.py` — a hardcoded allowlist of safe hledger queries. No raw file access, no shell execution, no journal modification.
 
-3. **Idempotent imports.** Every transaction gets a SHA-256 fingerprint. Re-importing the same CSV produces zero duplicates.
+3. **Idempotent imports.** Every transaction gets a SHA-256 fingerprint. Re-importing the same data produces zero duplicates.
 
 4. **Two-phase posting.** Transactions land in `staging/` first, get reviewed, then move to `postings/`. Nothing appears in hledger queries until explicitly posted.
 
 5. **Rules are data, not code.** Payee normalization and account categorization live in YAML files. Add a new merchant by editing a YAML file, not Python code.
 
-6. **Canonical intermediate format.** Raw CSV → JSONL → journal. The JSONL step decouples institution-specific parsing from journal generation, making it easy to add new banks.
+6. **Canonical intermediate format.** Raw data → JSONL → journal. The JSONL step decouples institution-specific parsing from journal generation, making it easy to add new banks.
+
+7. **Dual access, single source.** Both local (stdio) and remote (Fly.io HTTPS) paths query the same journal data through the same `fin_commands.py` interface.
 
 ---
 
@@ -350,13 +419,16 @@ finance-llm/
 | Component | Technology |
 |-----------|-----------|
 | Accounting engine | hledger 1.51+ |
-| Runtime | Python 3.11+ |
+| Runtime | Python 3.13+ |
 | Bank data ingestion | SimpleFIN API |
-| LLM interaction | MCP (Model Context Protocol) via `mcp` SDK |
-| ChatGPT integration | ChatGPT desktop app MCP support |
+| MCP framework | FastMCP (`mcp` SDK 1.26+) |
+| MCP transports | stdio (local), streamable-http (remote) |
+| HTTP server | Starlette + Uvicorn |
+| ChatGPT integration | Desktop (stdio), Web (remote MCP connector) |
 | Automated reports | OpenAI API (`gpt-4o`) |
-| Email ingestion | *(removed — replaced by SimpleFIN)* |
+| Hosting | Fly.io (Docker, shared-cpu-1x, 256MB, sjc) |
+| CI/CD | GitHub Actions → `fly deploy` on push |
 | CLI framework | Click |
 | Terminal UI | Rich |
 | Config format | YAML (PyYAML) |
-| State stores | SQLite (built-in) |
+| State stores | SQLite (WAL mode) |
