@@ -1,8 +1,6 @@
 """SQLite state management for deduplication.
 
-Manages two databases:
-- seen_emails: tracks processed email message IDs
-- seen_transactions: tracks posted transaction fingerprints
+Tracks posted transaction fingerprints to prevent duplicate journal entries.
 """
 
 from __future__ import annotations
@@ -33,42 +31,6 @@ class StateDB:
 
     def __exit__(self, *args: object) -> None:
         self.close()
-
-
-class SeenEmails(StateDB):
-    """Tracks processed email message IDs to prevent re-downloading."""
-
-    def _init_schema(self) -> None:
-        self._conn.execute("""
-            CREATE TABLE IF NOT EXISTS seen_emails (
-                message_id TEXT PRIMARY KEY,
-                institution TEXT,
-                fetched_at TEXT NOT NULL,
-                file_path TEXT
-            )
-        """)
-        self._conn.commit()
-
-    def is_seen(self, message_id: str) -> bool:
-        row = self._conn.execute(
-            "SELECT 1 FROM seen_emails WHERE message_id = ?", (message_id,)
-        ).fetchone()
-        return row is not None
-
-    def mark_seen(
-        self, message_id: str, institution: str, file_path: str | None = None
-    ) -> None:
-        now = datetime.now(timezone.utc).isoformat()
-        self._conn.execute(
-            "INSERT OR IGNORE INTO seen_emails (message_id, institution, fetched_at, file_path) "
-            "VALUES (?, ?, ?, ?)",
-            (message_id, institution, now, file_path),
-        )
-        self._conn.commit()
-
-    def count(self) -> int:
-        row = self._conn.execute("SELECT COUNT(*) FROM seen_emails").fetchone()
-        return row[0] if row else 0
 
 
 class SeenTransactions(StateDB):

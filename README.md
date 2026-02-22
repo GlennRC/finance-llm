@@ -5,7 +5,7 @@ Personal finance system with LLM-assisted insights via hledger.
 ## Architecture
 
 ```
-Email → CSV → Ingest → hledger Journal
+SimpleFIN → Ingest → hledger Journal
 ChatGPT → MCP Server → fin tools → hledger → Insight
 ```
 
@@ -15,8 +15,8 @@ ChatGPT → MCP Server → fin tools → hledger → Insight
 # Install
 pip install -e ".[dev]"
 
-# Import a CSV manually
-fin-ingest --file bank_statement.csv --profile chase
+# Import from SimpleFIN
+fin-ingest
 
 # Review uncategorized transactions
 fin-review
@@ -43,17 +43,16 @@ src/finance_llm/
 │   ├── rules.py            # Payee/account matching
 │   ├── journal_writer.py   # JSONL → hledger journal
 │   ├── fin_commands.py     # Safe hledger command registry
-│   ├── email_client.py     # Gmail OAuth2 client
 │   ├── mcp_server.py       # MCP protocol handler
 │   └── report_generator.py # AI report summarization
 ├── bin/                    # CLI entry points
 │   ├── fin.py              # hledger wrapper CLI
-│   ├── ingest.py           # Import pipeline
+│   ├── ingest.py           # Import pipeline (SimpleFIN)
 │   ├── review.py           # Transaction review
 │   ├── post.py             # Finalize to journal
 │   └── mcp.py              # MCP server entry point
 journal/                    # hledger journals (source of truth)
-import/                     # CSV import pipeline
+import/                     # Import pipeline
 ├── raw/                    # Original CSVs
 ├── canonical/              # Normalized JSONL
 ├── rules/                  # Payee/account/CSV rules (YAML)

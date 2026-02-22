@@ -2,7 +2,7 @@
 
 ## Overview
 
-Finance LLM is a personal finance system that combines **hledger** (plain-text accounting) with **LLM-powered insights** via ChatGPT. Bank statements flow in as CSV files, get transformed into hledger journals, and become queryable through both a CLI and ChatGPT's desktop app.
+Finance LLM is a personal finance system that combines **hledger** (plain-text accounting) with **LLM-powered insights** via ChatGPT. Bank data flows in via **SimpleFIN** (direct bank API), gets transformed into hledger journals, and becomes queryable through both a CLI and ChatGPT.
 
 The system has three layers: **data ingestion**, **accounting engine**, and **LLM interaction**.
 
@@ -12,28 +12,28 @@ The system has three layers: **data ingestion**, **accounting engine**, and **LL
 
 ```
                           ┌──────────────────────┐
-                          │       Gmail           │
-                          │  (bank CSV emails)    │
+                          │      SimpleFIN        │
+                          │  (bank API access)    │
                           └──────────┬───────────┘
-                                     │ OAuth2 API
+                                     │ REST API
                                      ▼
 ┌─────────────────────────────────────────────────────────────────────┐
 │                                                                     │
 │   LAYER 1: DATA INGESTION                                           │
 │                                                                     │
 │   ┌──────────────┐    ┌──────────────┐    ┌───────────────────┐    │
-│   │ email_client  │───▶│csv_normalizer│───▶│  journal_writer   │    │
+│   │ SimpleFIN     │───▶│csv_normalizer│───▶│  journal_writer   │    │
 │   │              │    │              │    │                   │    │
-│   │ Fetch CSV    │    │ Parse with   │    │ Apply rules,     │    │
-│   │ attachments  │    │ CSV profile  │    │ dedup, write     │    │
-│   │ from Gmail   │    │ → JSONL      │    │ hledger entries   │    │
+│   │ Fetch bank   │    │ Parse with   │    │ Apply rules,     │    │
+│   │ transactions │    │ CSV profile  │    │ dedup, write     │    │
+│   │ via API      │    │ → JSONL      │    │ hledger entries   │    │
 │   └──────┬───────┘    └──────┬───────┘    └────────┬──────────┘    │
 │          │                   │                     │               │
 │          ▼                   ▼                     ▼               │
 │   ┌────────────┐     ┌────────────┐        ┌────────────┐         │
 │   │import/raw/ │     │ import/    │        │ journal/   │         │
 │   │ (archived  │     │ canonical/ │        │ staging/   │         │
-│   │  CSVs)     │     │ (JSONL)    │        │ (pending)  │         │
+│   │  data)     │     │ (JSONL)    │        │ (pending)  │         │
 │   └────────────┘     └────────────┘        └────────────┘         │
 │                                                                     │
 │   Supporting: fingerprint.py (dedup) │ rules.py (YAML) │ state.py │
@@ -127,19 +127,7 @@ The primary way to interact with your finances through an LLM. The ChatGPT deskt
 
 ---
 
-### 2. Email Fetcher
-
-**Type:** Cron job or manual trigger
-**Entry point:** `fin-ingest` (email mode, future)
-**Module:** `lib/email_client.py`
-
-Connects to Gmail via OAuth2 API, searches for emails matching bank statement patterns (`has:attachment filename:csv`), downloads CSV attachments, and saves them to `import/raw/`. Deduplicates using `seen_emails.sqlite` so the same email is never processed twice.
-
-**Institution detection:** Automatically identifies the bank from the sender/subject line (Chase, Amex, BofA, Citi, Wells Fargo, Capital One) and selects the correct CSV profile.
-
----
-
-### 3. Weekly Report Generator
+### 2. Weekly Report Generator
 
 **Type:** Cron job
 **Entry point:** `bin/weekly-report` (planned)
@@ -214,7 +202,6 @@ Moves `journal/staging/*.journal` → `journal/postings/YYYY/YYYY-MM/` and updat
 
 | Library | Input | Output | Purpose |
 |---------|-------|--------|---------|
-| `email_client.py` | Gmail API | `import/raw/*.csv` | Fetch CSV attachments |
 | `csv_normalizer.py` | Raw CSV + profile YAML | Canonical JSONL | Parse institution-specific CSVs |
 | `journal_writer.py` | Canonical JSONL | `journal/staging/*.journal` | Generate hledger entries |
 | `fin_commands.py` | Query parameters | hledger text output | Safe hledger command execution |
@@ -227,7 +214,7 @@ Moves `journal/staging/*.journal` → `journal/postings/YYYY/YYYY-MM/` and updat
 |---------|---------|
 | `fingerprint.py` | SHA-256 transaction hashing: `hash(account + date + amount + normalized_payee + source_id)` |
 | `rules.py` | YAML-based payee normalization + account categorization with regex support |
-| `state.py` | SQLite wrappers for `seen_emails` and `seen_transactions` dedup databases |
+| `state.py` | SQLite wrapper for `seen_transactions` dedup database |
 
 ---
 
@@ -293,9 +280,7 @@ rules:
 
 | Store | Location | Purpose |
 |-------|----------|---------|
-| `seen_emails.sqlite` | `import/state/` | Prevents re-downloading the same email. Key: Gmail message ID. |
 | `seen_transactions.sqlite` | `import/state/` | Prevents duplicate journal entries. Key: SHA-256 fingerprint. |
-| `gmail_token.json` | `import/state/` | Gmail OAuth2 refresh token. |
 
 Both SQLite databases use WAL mode for safe concurrent access.
 
@@ -317,7 +302,6 @@ finance-llm/
 │       ├── fin_commands.py         #   safe hledger command registry
 │       ├── csv_normalizer.py       #   CSV → canonical JSONL
 │       ├── journal_writer.py       #   JSONL → hledger journal
-│       ├── email_client.py         #   Gmail OAuth2 client
 │       ├── report_generator.py     #   AI report summarization
 │       ├── fingerprint.py          #   transaction dedup hashing
 │       ├── rules.py                #   YAML payee/account matching
@@ -367,10 +351,11 @@ finance-llm/
 |-----------|-----------|
 | Accounting engine | hledger 1.51+ |
 | Runtime | Python 3.11+ |
+| Bank data ingestion | SimpleFIN API |
 | LLM interaction | MCP (Model Context Protocol) via `mcp` SDK |
 | ChatGPT integration | ChatGPT desktop app MCP support |
 | Automated reports | OpenAI API (`gpt-4o`) |
-| Email ingestion | Gmail API + OAuth2 |
+| Email ingestion | *(removed — replaced by SimpleFIN)* |
 | CLI framework | Click |
 | Terminal UI | Rich |
 | Config format | YAML (PyYAML) |
