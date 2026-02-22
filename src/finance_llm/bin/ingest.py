@@ -114,19 +114,30 @@ def ingest_simplefin(project_root: Path, days: int) -> list[CanonicalTransaction
     return all_transactions
 
 
+_INSTITUTION_DISPLAY = {
+    "firsttech": "FirstTech",
+    "citi": "Citi",
+    "chase": "Chase",
+    "amex": "Amex",
+    "discover": "Discover",
+    "wellsfargo": "WellsFargo",
+}
+
+
 def _map_account(account_name: str, institution: str) -> str:
     """Map a SimpleFIN account name to an hledger account."""
+    display = _INSTITUTION_DISPLAY.get(institution, institution.title())
     name_lower = account_name.lower()
     if any(kw in name_lower for kw in ["checking", "share draft"]):
-        return f"Assets:Checking:{institution.title()}"
+        return f"Assets:Checking:{display}"
     elif any(kw in name_lower for kw in ["saving", "money market"]):
-        return f"Assets:Savings:{institution.title()}"
+        return f"Assets:Savings:{display}"
     elif any(kw in name_lower for kw in ["credit", "card"]):
-        return f"Liabilities:CreditCard:{institution.title()}"
+        return f"Liabilities:CreditCard:{display}"
     elif any(kw in name_lower for kw in ["loan", "mortgage", "auto"]):
-        return f"Liabilities:Loan:{institution.title()}"
+        return f"Liabilities:Loan:{display}"
     else:
-        return f"Assets:Other:{institution.title()}"
+        return f"Assets:Other:{display}"
 
 
 @click.command()
