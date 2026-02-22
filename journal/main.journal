@@ -1,4 +1,9 @@
 ; Main hledger journal — auto-generated includes
 ; DO NOT edit directly — use bin/post to add transactions
 
+include postings/2025/2025-12/citi.journal
+include postings/2025/2025-12/firsttech.journal
+include postings/2026/2026-01/citi.journal
 include postings/2026/2026-01/firsttech.journal
+include postings/2026/2026-02/citi.journal
+include postings/2026/2026-02/firsttech.journal

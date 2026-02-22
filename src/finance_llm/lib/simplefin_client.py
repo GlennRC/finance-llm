@@ -58,10 +58,12 @@ class SimpleFINAccount:
 
     @property
     def institution(self) -> str:
-        """Derive institution name from org domain."""
+        """Derive institution name from org domain and account name."""
         domain = self.org_domain.lower()
+        name_lower = self.name.lower()
+
         # Map known domains to our profile names
-        mappings = {
+        domain_mappings = {
             "firsttechfed.com": "firsttech",
             "chase.com": "chase",
             "americanexpress.com": "amex",
@@ -71,6 +73,30 @@ class SimpleFINAccount:
             "citibank.com": "citi",
             "discover.com": "discover",
         }
+        for key, value in domain_mappings.items():
+            if key in domain:
+                return value
+
+        # Fallback: detect institution from account name
+        name_mappings = {
+            "citi": "citi",
+            "chase": "chase",
+            "amex": "amex",
+            "american express": "amex",
+            "costco anywhere": "citi",  # Costco Visa is Citi
+            "double cash": "citi",
+            "discover": "discover",
+            "wells fargo": "wells",
+            "capital one": "capital_one",
+            "apple card": "apple",
+            "first tech": "firsttech",
+        }
+        for key, value in name_mappings.items():
+            if key in name_lower:
+                return value
+
+        # Last resort: use first part of domain
+        return domain.split(".")[0]
         for key, value in mappings.items():
             if key in domain:
                 return value
