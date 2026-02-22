@@ -23,6 +23,18 @@ def main(use_http: bool, port: int, host: str) -> None:
         mcp.settings.host = host
         mcp.settings.port = port
         mcp.settings.stateless_http = True
+        mcp.settings.transport_security.allowed_hosts = [
+            "finance-llm-mcp.fly.dev",
+            "localhost:*",
+            "127.0.0.1:*",
+        ]
+        mcp.settings.transport_security.allowed_origins = [
+            "https://finance-llm-mcp.fly.dev",
+            "https://chatgpt.com",
+            "https://cdn.oaistatic.com",
+            "http://localhost:*",
+            "http://127.0.0.1:*",
+        ]
         mcp.run(transport="streamable-http")
     else:
         mcp.run(transport="stdio")

@@ -33,6 +33,9 @@ fin-review = "finance_llm.bin.review:main"
 fin-post = "finance_llm.bin.post:main"
 fin-mcp = "finance_llm.bin.mcp:main"
 
+[tool.hatch.build.targets.wheel]
+packages = ["src/finance_llm"]
+
 [tool.ruff]
 target-version = "py311"
 line-length = 100

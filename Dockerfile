@@ -9,13 +9,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certifi
 
 WORKDIR /app
 
-# Install Python deps first (cache layer)
+# Copy source and install
 COPY pyproject.toml .
-RUN pip install --no-cache-dir .
-
-# Copy source and reinstall (picks up entry points)
 COPY src/ src/
-RUN pip install --no-cache-dir -e .
+RUN pip install --no-cache-dir .
 
 # Copy journal data
 COPY journal/ journal/
