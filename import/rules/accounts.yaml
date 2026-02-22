@@ -1,16 +1,76 @@
 # Account categorization rules
-# Maps payees/patterns to hledger expense accounts
-#
-# Format:
-#   - payee: "Clean Payee Name"
-#     account: "Expenses:Category:Subcategory"
-#
-# Examples:
-#   - payee: "Trader Joe's"
-#     account: "Expenses:Groceries"
-#   - payee: "Amazon"
-#     account: "Expenses:Shopping"
-#   - payee: "Netflix"
-#     account: "Expenses:Subscriptions"
+# Maps payees to hledger expense accounts
 
-rules: []
+rules:
+  # Income
+  - payee: "HPE Payroll"
+    account: "Income:Salary:HPE"
+  - payee: "Sutter Health Payroll"
+    account: "Income:Salary:SutterHealth"
+
+  # Housing
+  - payee: "Freedom Mortgage"
+    account: "Expenses:Housing:Mortgage"
+  - payee: "City of Roseville Utilities"
+    account: "Expenses:Housing:Utilities"
+  - payee: "PG&E"
+    account: "Expenses:Housing:Electric"
+  - payee: "Sunstrong Solar"
+    account: "Expenses:Housing:Solar"
+
+  # Childcare & Education
+  - payee: "Goddard School"
+    account: "Expenses:Childcare"
+  - payee: "ScholarShare 529"
+    account: "Expenses:Education:529"
+
+  # Auto
+  - payee: "VW Credit Auto Loan"
+    account: "Expenses:Auto:Loan"
+  - payee: "Shell Gas"
+    account: "Expenses:Auto:Gas"
+
+  # Telecom
+  - payee: "AT&T"
+    account: "Expenses:Telecom:ATT"
+
+  # Credit Card Payments (transfers, not expenses)
+  - payee: "Citi Card Payment"
+    account: "Liabilities:CreditCard:Citi"
+  - payee: "Apple Card Payment"
+    account: "Liabilities:CreditCard:Apple"
+  - payee: "Amex Payment"
+    account: "Liabilities:CreditCard:Amex"
+  - payee: "Chase Card Payment"
+    account: "Liabilities:CreditCard:Chase"
+  - payee: "Wells Fargo Card Payment"
+    account: "Liabilities:CreditCard:WellsFargo"
+  - payee: "Macy's"
+    account: "Liabilities:CreditCard:Macys"
+
+  # Transfers
+  - payee: "Discover Transfer"
+    account: "Assets:Savings:Discover"
+  - payee: "Venmo"
+    account: "Expenses:Transfers:Venmo"
+
+  # Shopping
+  - payee: "Amazon"
+    account: "Expenses:Shopping:Amazon"
+  - payee: "Whole Foods"
+    account: "Expenses:Groceries"
+
+  # Internal bank transfers / deposits
+  - payee: "First Tech Mobile Deposit"
+    account: "Assets:Checking:FirstTech"
+  - payee: "First Tech Mobile Deposit Adj"
+    account: "Assets:Checking:FirstTech"
+  - payee: "First Tech Deposit"
+    account: "Assets:Checking:FirstTech"
+  - payee: "First Tech P2P Transfer"
+    account: "Expenses:Transfers:P2P"
+  - payee: "First Tech ATM Deposit"
+    account: "Assets:Checking:FirstTech"
+  - payee: "Amex Payment Reversal"
+    account: "Liabilities:CreditCard:Amex"
+

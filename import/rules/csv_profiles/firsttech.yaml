@@ -1,0 +1,26 @@
+# First Tech Federal Credit Union CSV profile
+
+institution: firsttech
+name: "First Tech Federal Credit Union"
+
+csv:
+  encoding: utf-8
+  delimiter: ","
+  skip_rows: 0
+  has_header: true
+
+columns:
+  date: "Posting Date"
+  description: "Description"
+  amount: "Amount"
+  reference: "Reference Number"
+  memo: "Extended Description"
+  category: "Transaction Category"
+  type: "Transaction Type"
+
+date_format: "%m/%d/%Y"
+
+# First Tech: positive = credit (income), negative = debit (spending)
+amount_invert: false
+
+default_account: "Assets:Checking:FirstTech"
