@@ -100,7 +100,7 @@ class FinCommands:
         Example: fin trend groceries 6 → grocery spending last 6 months.
         """
         months = min(months, MAX_MONTHS)
-        args = ["bal", account, "--monthly", "--period", f"last {months} months"]
+        args = ["bal", account, "--monthly", "-b", f"{months} months ago"]
         return self._run_hledger(args)
 
     def merchants(self, period: str | None = None, limit: int = 20) -> FinResult:
