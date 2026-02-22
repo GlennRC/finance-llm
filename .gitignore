@@ -28,6 +28,7 @@ import/canonical/
 import/state/*.sqlite
 import/state/gmail_token.json
 import/state/gmail_credentials.json
+import/state/simplefin_access.json
 reports/weekly/
 
 # Journal data (tracked separately or kept private)

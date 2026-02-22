@@ -132,5 +132,59 @@ def stats(root: str | None) -> None:
         click.echo(f"Error: {result.error}", err=True)
 
 
+@main.command("setup-simplefin")
+@click.option("--root", default=None)
+def setup_simplefin(root: str | None) -> None:
+    """Connect SimpleFIN for automatic bank transaction pulls."""
+    from finance_llm.lib.simplefin_client import (
+        SimpleFINClient,
+        load_access_url,
+        save_access_url,
+    )
+
+    project_root = Path(root) if root else get_project_root()
+    state_dir = project_root / "import" / "state"
+
+    existing = load_access_url(state_dir)
+    if existing:
+        click.echo("SimpleFIN is already configured.")
+        if not click.confirm("Replace existing connection?"):
+            return
+
+    click.echo("\nSimpleFIN Setup")
+    click.echo("=" * 40)
+    click.echo("1. Go to: https://bridge.simplefin.org/simplefin/create")
+    click.echo("2. Connect your bank account(s)")
+    click.echo("3. Copy the Setup Token\n")
+
+    token = click.prompt("Paste your SimpleFIN Setup Token")
+    token = token.strip()
+
+    click.echo("Claiming access URL...")
+    try:
+        access_url = SimpleFINClient.claim_access_url(token)
+    except Exception as e:
+        click.echo(f"Error: {e}", err=True)
+        raise SystemExit(1)
+
+    save_access_url(access_url, state_dir)
+    click.echo("Access URL saved securely.")
+
+    # Test the connection
+    click.echo("Testing connection...")
+    try:
+        client = SimpleFINClient(access_url)
+        accounts = client.get_accounts()
+        click.echo(f"\nConnected! Found {len(accounts)} account(s):")
+        for acct in accounts:
+            click.echo(f"  • {acct.name} ({acct.institution}) — ${acct.balance}")
+    except Exception as e:
+        click.echo(f"Warning: Connection test failed: {e}", err=True)
+        click.echo("The access URL was saved — you can retry with 'fin-ingest --source simplefin'")
+
+    click.echo("\nDone! Pull transactions with:")
+    click.echo("  fin-ingest --source simplefin --days 30")
+
+
 if __name__ == "__main__":
     main()
